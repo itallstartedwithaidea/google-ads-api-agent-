@@ -1,5 +1,5 @@
 # =============================================================================
-# Google Ads Agent — Docker Compose
+# Google Ads API Agent — Docker Compose
 # =============================================================================
 # Usage:
 #   docker compose up              → Start the agent API

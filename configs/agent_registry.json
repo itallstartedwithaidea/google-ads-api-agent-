@@ -1,11 +1,11 @@
 {
   "main_agent": {
-    "id": "dc78f37b-99ce-4c7a-b912-704b1aa78156",
-    "name": "Google Ads Agent [beta/live-write/read]",
+    "id": "d99e43e0-cf27-45d6-bc97-43e5a6572c96",
+    "name": "Google Ads API Agent",
     "model": "claude-opus-4-5",
     "access_level": "PRIVATE",
-    "organization": "org-10004586",
-    "owner_user_id": "10481239",
+    "organization": "org-XXXXXXXXXX",
+    "owner_user_id": "YOUR_USER_ID",
     "system_prompt_file": "prompts/main_agent_system_prompt.md",
     "builtin_tools": [
       "code_interpreter",
@@ -23,7 +23,7 @@
       {
         "number": 1,
         "name": "Label Manager",
-        "id": "99090289-128a-4cf9-9a44-317bba38ce7e",
+        "id": "1b6e3cbd-e342-4c83-a685-94465e545ff9",
         "source_file": "actions/main-agent/01_label_manager.py",
         "credential_pattern": "A",
         "integration": "google_ads"
@@ -31,7 +31,7 @@
       {
         "number": 2,
         "name": "Conversion Tracking Manager",
-        "id": "4e7dd1b7-36d1-40ce-855c-269c7e4877ae",
+        "id": "038c2c0f-edb6-4674-b79d-8481ffed4dcf",
         "source_file": "actions/main-agent/02_conversion_tracking_manager.py",
         "credential_pattern": "A",
         "integration": "google_ads"
@@ -39,7 +39,7 @@
       {
         "number": 3,
         "name": "Audience Manager",
-        "id": "1ad57d33-9849-44bc-b69e-c37f01c1b145",
+        "id": "f15de61b-9f4c-4f51-b9d4-c96471c09578",
         "source_file": "actions/main-agent/03_audience_manager.py",
         "credential_pattern": "B",
         "integration": "google_ads"
@@ -47,7 +47,7 @@
       {
         "number": 4,
         "name": "Asset Manager",
-        "id": "b0d7f48c-18a4-4194-a251-29f3c0b3e222",
+        "id": "97d5d97b-c77a-4c71-bed5-a87934a7720d",
         "source_file": "actions/main-agent/04_asset_manager.py",
         "credential_pattern": "B",
         "integration": "google_ads"
@@ -55,7 +55,7 @@
       {
         "number": 5,
         "name": "Budget Manager",
-        "id": "b191b54e-5d38-4da9-ac03-be0e1787a604",
+        "id": "1860f479-89c2-4545-8f50-1b10205aad67",
         "source_file": "actions/main-agent/05_budget_manager.py",
         "credential_pattern": "B",
         "integration": "google_ads"
@@ -63,7 +63,7 @@
       {
         "number": 6,
         "name": "RSA Ad Manager",
-        "id": "4c2ed646-606d-450e-9f32-57d13f4342dd",
+        "id": "150453ab-349d-457c-b254-675a033f146d",
         "source_file": "actions/main-agent/06_rsa_ad_manager.py",
         "credential_pattern": "B",
         "integration": "google_ads"
@@ -71,7 +71,7 @@
       {
         "number": 7,
         "name": "Bid & Keyword Manager",
-        "id": "facfd086-2437-4f6b-9625-3b68050d6437",
+        "id": "87a75276-0ecd-48f4-84a5-b3e007b13f09",
         "source_file": "actions/main-agent/07_bid_keyword_manager.py",
         "credential_pattern": "B",
         "integration": "google_ads"
@@ -79,7 +79,7 @@
       {
         "number": 8,
         "name": "Negative Keywords Manager",
-        "id": "fd7b1afc-0766-4c7f-b7ab-e0ff2c97fe92",
+        "id": "9dfaaa83-58b7-4273-8383-bcc6b83ec8f5",
         "source_file": "actions/main-agent/08_negative_keywords_manager.py",
         "credential_pattern": "B",
         "integration": "google_ads"
@@ -87,7 +87,7 @@
       {
         "number": 9,
         "name": "Campaign & Ad Group Manager",
-        "id": "b818b493-bf8c-469a-a123-e1c1cc509851",
+        "id": "98418c5d-2e83-4a76-b833-abbc58164830",
         "source_file": "actions/main-agent/09_campaign_adgroup_manager.py",
         "credential_pattern": "B",
         "integration": "google_ads"
@@ -95,7 +95,7 @@
       {
         "number": 10,
         "name": "Google Ads Mutate",
-        "id": "205d3fbb-9d0f-44c9-8137-70f687bfc072",
+        "id": "cd9bfe4c-4ed6-4ba9-aea3-203a80ab933b",
         "source_file": "actions/main-agent/10_google_ads_mutate.py",
         "credential_pattern": "B",
         "integration": "google_ads"
@@ -103,7 +103,7 @@
       {
         "number": 11,
         "name": "Account Access Checker",
-        "id": "cb0400cb-6be3-42d2-8ca5-b4c4a0ef6209",
+        "id": "b4d19d74-e17e-4ef8-995d-65d6f2c21fec",
         "source_file": "actions/main-agent/11_account_access_checker.py",
         "credential_pattern": "B",
         "integration": "google_ads"
@@ -111,7 +111,7 @@
       {
         "number": 12,
         "name": "Scripts Manager",
-        "id": "5b84fbfc-021b-474b-a0de-e3521f3751e3",
+        "id": "afa413bc-7831-483e-b4d9-2f859fee145a",
         "source_file": "actions/main-agent/12_scripts_manager.py",
         "credential_pattern": "A",
         "integration": "google_ads"
@@ -119,7 +119,7 @@
       {
         "number": 13,
         "name": "Experiments Manager",
-        "id": "9b44f60e-d0c1-4c42-bccd-7a81c3e34a22",
+        "id": "b1c8c8f4-bb06-4f84-9402-c0bea94ace7d",
         "source_file": "actions/main-agent/13_experiments_manager.py",
         "credential_pattern": "A",
         "integration": "google_ads"
@@ -127,7 +127,7 @@
       {
         "number": 14,
         "name": "Package Installer",
-        "id": "9de09fd1-92c3-4b72-bee3-b81b76431e80",
+        "id": "e8e9907a-715e-49e9-9142-055b2011e589",
         "source_file": "actions/main-agent/14_package_installer.py",
         "credential_pattern": "D",
         "integration": "none"
@@ -135,7 +135,7 @@
       {
         "number": 15,
         "name": "Check User Access Levels",
-        "id": "8f788bd9-c295-4d8e-9227-4d9b52883c0e",
+        "id": "0c6fc8de-20e4-478a-b8f7-17190f7e831d",
         "source_file": "actions/main-agent/15_check_user_access.py",
         "credential_pattern": "B",
         "integration": "google_ads"
@@ -143,7 +143,7 @@
       {
         "number": 16,
         "name": "API Gateway - Context Manager",
-        "id": "e4529640-6761-4e95-a54b-84390b137515",
+        "id": "81fa2bc5-2401-494c-8f55-2a44603130a3",
         "source_file": "actions/main-agent/16_api_gateway.py",
         "credential_pattern": "B",
         "integration": "google_ads"
@@ -151,7 +151,7 @@
       {
         "number": 17,
         "name": "Session & State Manager",
-        "id": "63993c88-23e2-42d3-8f04-cb52758a736a",
+        "id": "da6b2b05-58cc-4879-ac2f-c12f29ebdee0",
         "source_file": "actions/main-agent/17_session_state_manager.py",
         "credential_pattern": "D",
         "integration": "none"
@@ -159,7 +159,7 @@
       {
         "number": 18,
         "name": "Cloudinary Creative Tools",
-        "id": "413cabd5-a8c8-4965-9c25-83e5d35e6aed",
+        "id": "296e3502-4145-4e24-8da9-eb1e06c284a2",
         "source_file": "actions/main-agent/18_cloudinary_creative_tools.py",
         "credential_pattern": "C",
         "integration": "cloudinary"
@@ -167,7 +167,7 @@
       {
         "number": 19,
         "name": "Query Planner & Budget Manager",
-        "id": "c3f33a4e-138e-48a6-a5e2-9648450349b4",
+        "id": "adc709f2-eaf3-4b98-abc2-4107f75c9520",
         "source_file": "actions/main-agent/19_query_planner.py",
         "credential_pattern": "A",
         "integration": "google_ads"
@@ -175,7 +175,7 @@
       {
         "number": 20,
         "name": "Recommendations Manager",
-        "id": "b06c3b34-a3f1-43ec-b20d-33cadb4be6b7",
+        "id": "20407f53-f385-4b6a-9e57-fc2ae6a67c1d",
         "source_file": "actions/main-agent/20_recommendations_manager.py",
         "credential_pattern": "A",
         "integration": "google_ads"
@@ -183,7 +183,7 @@
       {
         "number": 21,
         "name": "Search Term Manager",
-        "id": "da0ea470-868f-4ba8-9880-f7e34f705f9c",
+        "id": "7aeaac89-d861-4773-80c7-3c58af3af23f",
         "source_file": "actions/main-agent/21_search_term_manager.py",
         "credential_pattern": "B",
         "integration": "google_ads"
@@ -191,7 +191,7 @@
       {
         "number": 22,
         "name": "Geo & Location Targeting Manager",
-        "id": "56eecd1d-fa61-4e1a-9df2-2381985db753",
+        "id": "dfee8d08-9771-491f-b6c1-c4f758e78d37",
         "source_file": "actions/main-agent/22_geo_location_manager.py",
         "credential_pattern": "B",
         "integration": "google_ads"
@@ -199,7 +199,7 @@
       {
         "number": 23,
         "name": "Device Performance Manager",
-        "id": "f92bb613-63ed-4468-94de-4a061e18bc25",
+        "id": "0dbb9a0a-1be2-482f-991a-f086076e57ef",
         "source_file": "actions/main-agent/23_device_performance_manager.py",
         "credential_pattern": "A",
         "integration": "google_ads"
@@ -207,7 +207,7 @@
       {
         "number": 24,
         "name": "Change History Manager",
-        "id": "d56d5657-5e01-4b4a-bc7d-ae04de62e60d",
+        "id": "a487723a-9208-4620-b101-4f46a9a24ceb",
         "source_file": "actions/main-agent/24_change_history_manager.py",
         "credential_pattern": "A",
         "integration": "google_ads"
@@ -215,7 +215,7 @@
       {
         "number": 25,
         "name": "Campaign Creator",
-        "id": "099db082-9e33-4b34-932f-2974d3209f65",
+        "id": "69571cfd-5e66-4b35-9bcf-d5265eab424f",
         "source_file": "actions/main-agent/25_campaign_creator.py",
         "credential_pattern": "A",
         "integration": "google_ads"
@@ -223,7 +223,7 @@
       {
         "number": 26,
         "name": "Ad Schedule Manager",
-        "id": "d9edcf51-7016-47c0-bb59-ce6ba0c312c1",
+        "id": "39ff268f-fadc-4bbd-8382-f57d4df42f44",
         "source_file": "actions/main-agent/26_ad_schedule_manager.py",
         "credential_pattern": "A",
         "integration": "google_ads"
@@ -231,7 +231,7 @@
       {
         "number": 27,
         "name": "Bidding Strategy Manager",
-        "id": "1b762c7d-3968-4335-8e68-d4b7769894eb",
+        "id": "6729d7a4-4468-4f20-b02c-605b5221ec05",
         "source_file": "actions/main-agent/27_bidding_strategy_manager.py",
         "credential_pattern": "A",
         "integration": "google_ads"
@@ -239,7 +239,7 @@
       {
         "number": 28,
         "name": "PMax Asset Group Manager",
-        "id": "8218e0f3-f8b8-4484-9278-a8ed2e35d643",
+        "id": "f33cd4e6-6d0b-4214-9fcb-d08a05abe26a",
         "source_file": "actions/main-agent/28_pmax_asset_group_manager.py",
         "credential_pattern": "A",
         "integration": "google_ads"
@@ -249,8 +249,8 @@
   "sub_agents": [
     {
       "number": 1,
-      "name": "Reporting & Analysis Sub-Agent [1 of 5]",
-      "id": "de724cf6-1bf3-4c88-8723-8f3583821824",
+      "name": "Simba — Reporting & Analysis",
+      "id": "8b9991fd-7750-417e-a2c2-69527d64388b",
       "model": "claude-opus-4-5",
       "access_level": "CHAT_ONLY",
       "system_prompt_file": "prompts/sub-agents/01_reporting_analysis.md",
@@ -259,8 +259,8 @@
     },
     {
       "number": 2,
-      "name": "Research & Intelligence Sub-Agent [2 of 5]",
-      "id": "77c5378f-e325-4de0-8504-29bbf44ffd0d",
+      "name": "Nemo — Research & Intelligence",
+      "id": "47885bdc-0390-44a4-ab58-9046c1182691",
       "model": "claude-opus-4-5",
       "access_level": "CHAT_ONLY",
       "system_prompt_file": "prompts/sub-agents/02_research_intelligence.md",
@@ -269,8 +269,8 @@
     },
     {
       "number": 3,
-      "name": "Optimization Sub-Agent [3 of 5]",
-      "id": "9f3a2bb4-67a5-4818-9e4c-d53dd694f3ae",
+      "name": "Elsa — Optimization",
+      "id": "c08c6cde-b9a6-4aa4-b7a2-3b6ed5720cbb",
       "model": "claude-opus-4-5",
       "access_level": "CHAT_ONLY",
       "system_prompt_file": "prompts/sub-agents/03_optimization.md",
@@ -279,8 +279,8 @@
     },
     {
       "number": 4,
-      "name": "Shopping & PMax Sub-Agent [4 of 5]",
-      "id": "474e12e3-af1d-4b36-8851-6ee1bca996aa",
+      "name": "Aladdin — Shopping & PMax",
+      "id": "b57147ce-fa6e-47ec-b92b-39bc8d16d7a7",
       "model": "claude-opus-4-5",
       "access_level": "CHAT_ONLY",
       "system_prompt_file": "prompts/sub-agents/04_shopping_pmax.md",
@@ -289,8 +289,8 @@
     },
     {
       "number": 5,
-      "name": "Creative Sub-Agent [5 of 5]",
-      "id": "a1000ff9-63c7-4a99-a6fd-45c25cf361ef",
+      "name": "Moana — Creative",
+      "id": "9aeb9afc-bd87-4df7-955a-1b928b23aa0e",
       "model": "claude-opus-4-5",
       "access_level": "CHAT_ONLY",
       "system_prompt_file": "prompts/sub-agents/05_creative.md",
@@ -299,8 +299,8 @@
     },
     {
       "number": 6,
-      "name": "Creative Innovate Tool",
-      "id": "08be59bb-819d-48fd-b2f7-851d002ae201",
+      "name": "Baymax — Creative Innovate",
+      "id": "9b971c1c-0204-4496-869e-7a3620718242",
       "model": "claude-sonnet-4-5",
       "access_level": "CHAT_ONLY",
       "system_prompt_file": "prompts/sub-agents/06_creative_innovate.md",
@@ -342,10 +342,10 @@
     }
   },
   "shared_users": [
-    {"user_id": "10481230", "access": "CAN_EDIT", "added": "2026-02-06"},
-    {"user_id": "10481240", "access": "CAN_EDIT", "added": "2026-02-06"},
-    {"user_id": "10481271", "access": "CAN_EDIT", "added": "2026-02-06"},
-    {"user_id": "10481257", "access": "CAN_EDIT", "added": "2026-02-06"},
-    {"user_id": "10481275", "access": "CAN_EDIT", "added": "2026-02-06"}
+    {"user_id": "TEAM_MEMBER_1", "access": "CAN_EDIT", "added": "2026-02-06"},
+    {"user_id": "TEAM_MEMBER_2", "access": "CAN_EDIT", "added": "2026-02-06"},
+    {"user_id": "TEAM_MEMBER_3", "access": "CAN_EDIT", "added": "2026-02-06"},
+    {"user_id": "TEAM_MEMBER_4", "access": "CAN_EDIT", "added": "2026-02-06"},
+    {"user_id": "TEAM_MEMBER_5", "access": "CAN_EDIT", "added": "2026-02-06"}
   ]
 }

@@ -1,6 +1,6 @@
-# 🎯 Google Ads Agent — Full Implementation Guide
+# 🎯 Google Ads API Agent — Full Implementation Guide
 
-> An enterprise-grade, AI-powered Google Ads management system with 28 custom API actions, 6 specialized sub-agents, and live read/write access to Google Ads accounts. Built for deployment on agent platforms that support Claude models and custom actions (e.g., OpenAI Custom GPTs/Agents, Relevance AI, or similar).
+> An enterprise-grade, AI-powered Google Ads management system with 28 custom API actions, 6 specialized sub-agents, and live read/write access to Google Ads accounts. Built for deployment on agent platforms that support Claude models and custom actions (e.g., OpenAI Custom GPTs/Agents, or similar agent platforms).
 
 ---
 
@@ -34,7 +34,7 @@
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/google-ads-agent.git
+git clone https://github.com/YOUR_USERNAME/google-ads-api-agent.git
 cd google-ads-agent
 
 # 2. Copy and fill in your credentials
@@ -63,7 +63,7 @@ This repo supports **two ways** to deploy the agent. Pick the one that fits your
 | Path | Best For | What You Need |
 |------|----------|---------------|
 | **A: Anthropic API (Programmatic)** | Production apps, SaaS products, automation pipelines, multi-tenant | Anthropic API key + your code |
-| **B: Agent Platform (Manual UI)** | Quick prototyping, single-user, visual builder | Account on Relevance AI, OpenAI, or similar |
+| **B: Agent Platform (Manual UI)** | Quick prototyping, single-user, visual builder | Account on an agent platform (OpenAI, etc.) |
 
 **Path A** is what makes this repeatable and scalable. Path B is the original build approach documented later in this README.
 
@@ -75,7 +75,7 @@ This is the **programmatic deployment** — no manual UI, no clicking. Everythin
 
 ### How It Works
 
-The action files in this repo were originally built for **Relevance AI** (an agent platform). The `deploy/` package adapts them to run standalone via the Anthropic API. Here's what happens under the hood when you run `python scripts/cli.py`:
+The action files in this repo were originally built for an agent platform. The `deploy/` package adapts them to run standalone via the Anthropic API. Here's what happens under the hood when you run `python scripts/cli.py`:
 
 ```
 YOU: "Show me campaigns for Acme Corp"
@@ -107,7 +107,7 @@ YOU: "Show me campaigns for Acme Corp"
 │                                                                 │
 │  1. Loads actions/main-agent/09_campaign_adgroup_manager.py     │
 │  2. Injects secrets={"DEVELOPER_TOKEN": "...", ...}             │
-│     into module namespace (replicating Relevance AI runtime)    │
+│     into module namespace (replicating agent platform runtime)    │
 │  3. Suppresses subprocess pip install calls                     │
 │  4. Inspects run() signature, drops any extra params            │
 │  5. Calls: run(action="list_campaigns", search="Acme Corp",    │
@@ -133,7 +133,7 @@ YOU: "Show me campaigns for Acme Corp"
 
 | Problem | What the action files do | What the adapter does |
 |---------|------------------------|----------------------|
-| **Secrets** | Reference `secrets["KEY"]` as a bare global injected by Relevance AI | Injects `secrets` dict into module `__dict__` before `exec_module()` |
+| **Secrets** | Reference `secrets["KEY"]` as a bare global injected by the agent platform | Injects `secrets` dict into module `__dict__` before `exec_module()` |
 | **Pip installs** | Run `subprocess.check_call(["pip", "install", "google-ads"])` at import time | Monkey-patches subprocess to skip pip commands (deps already in `requirements.txt`) |
 | **Parameter mismatch** | 26/28 `run()` functions have explicit params (no `**kwargs`) | Inspects `run()` signature via `inspect.signature()`, drops any params Claude sends that aren't in the function |
 
@@ -155,7 +155,7 @@ YOU: "Show me campaigns for Acme Corp"
 
 ```bash
 # 1. Clone — gets all 66 files: action code, prompts, schemas, adapter layer
-git clone https://github.com/YOUR_USERNAME/google-ads-agent.git
+git clone https://github.com/YOUR_USERNAME/google-ads-api-agent.git
 cd google-ads-agent
 
 # 2. Virtual env — isolates dependencies
@@ -185,7 +185,7 @@ python scripts/cli.py
 **After step 6, you'll see:**
 ```
 ┌─────────────────────────────────────────┐
-│    Google Ads Agent — Interactive CLI    │
+│    Google Ads API Agent — Interactive CLI    │
 │    Type 'quit' to exit, 'reset' to      │
 │    clear conversation history            │
 └─────────────────────────────────────────┘
@@ -327,7 +327,7 @@ scripts/
 
 ## Path B: Deploy on an Agent Platform (Manual UI)
 
-If you prefer a visual builder (Relevance AI, OpenAI, etc.), follow Steps 2–7 below. You'll paste system prompts, action code, and credentials into the platform's UI.
+If you prefer a visual builder (OpenAI, or similar), follow Steps 2–7 below. You'll paste system prompts, action code, and credentials into the platform's UI.
 
 ---
 
@@ -373,7 +373,7 @@ google-ads-agent/
 │       ├── creative/                  ← 2 action files for Creative sub-agent
 │       │   ├── 01_responsive_display_ads_manager.py
 │       │   └── 02_demand_gen_ads_manager.py
-│       └── creative-innovate/         ← 2 action files for Creative Innovate Tool
+│       └── creative-innovate/         ← 2 action files for Baymax — Creative Innovate
 │           ├── 01_cloudinary_tools.py
 │           └── 02_gemini_vision.py
 │
@@ -409,7 +409,7 @@ Before you begin, you'll need:
 | **Cloudinary account** | Image/video processing for creative assets | Free tier (25 credits/mo) |
 | **SearchAPI.io account** | Real-time Google search, Trends, Ads Transparency | Free tier (100 searches/mo) |
 | **Google AI Studio account** | Gemini API for AI creative generation | Free tier available |
-| **Agent platform account** | Where you deploy the agent (e.g., OpenAI, Relevance AI) | Varies |
+| **Agent platform account** | Where you deploy the agent (e.g., OpenAI, or similar) | Varies |
 
 ---
 
@@ -580,7 +580,7 @@ Cloudinary handles all image/video processing — resizing, AI generative fill, 
 
 #### How Cloudinary Connects to the Agent
 
-The **Cloudinary Creative Tools** action (Action #18 on the main agent) and the **Creative Innovate Tool** sub-agent both use these credentials. They enable:
+The **Cloudinary Creative Tools** action (Action #18 on the main agent) and the **Baymax — Creative Innovate** sub-agent both use these credentials. They enable:
 - Uploading images/videos from URLs
 - Resizing for 20+ platform presets (Instagram, TikTok, YouTube, display ads, etc.)
 - AI generative fill for extending images to non-standard aspect ratios
@@ -599,7 +599,7 @@ SearchAPI.io provides real-time Google search results, Google Trends data, and G
 
 #### How SearchAPI Connects to the Agent
 
-The **Research & Intelligence Sub-Agent [2 of 5]** uses SearchAPI through three custom actions:
+The **Nemo — Research & Intelligence** uses SearchAPI through three custom actions:
 - **Google Search API** — real-time SERP results with ads, organic, knowledge graph
 - **Google Ads Transparency Center** — see what ads competitors are running
 - **Google Trends Analyzer** — trend data, related queries, geographic interest
@@ -610,7 +610,7 @@ These actions pass the API key via `secrets["SEARCHAPI_API_KEY"]` in each action
 
 ### 1D: Google AI / Gemini Credentials
 
-The Creative Innovate Tool uses Google's Gemini API for AI-powered image generation and vision analysis.
+The Baymax — Creative Innovate uses Google's Gemini API for AI-powered image generation and vision analysis.
 
 1. Go to **[Google AI Studio](https://aistudio.google.com)**
 2. Sign in with your Google account
@@ -623,7 +623,7 @@ The Creative Innovate Tool uses Google's Gemini API for AI-powered image generat
 
 #### How Gemini Connects to the Agent
 
-The **Creative Innovate Tool** sub-agent uses Gemini for:
+The **Baymax — Creative Innovate** sub-agent uses Gemini for:
 - AI image generation/extension for social media formats
 - Vision analysis of existing creative assets
 - Generating display ad variations from source images
@@ -660,7 +660,7 @@ GOOGLE_AI_API_KEY=AIzaSyAbCdEfGhIjKlMnOpQrStUvWxYz
 
 ## Step 2: Create the Main Agent
 
-> These instructions use generic terminology. Adapt button names/menus for your specific agent platform (OpenAI, Relevance AI, etc.).
+> These instructions use generic terminology. Adapt button names/menus for your specific agent platform (e.g., OpenAI, or similar).
 
 ### 2.1 — Create the Agent Shell
 
@@ -668,7 +668,7 @@ GOOGLE_AI_API_KEY=AIzaSyAbCdEfGhIjKlMnOpQrStUvWxYz
 
 | Setting | Value |
 |---------|-------|
-| Name | `Google Ads Agent [beta/live-write/read]` |
+| Name | `Google Ads API Agent` |
 | Model | `claude-opus-4-5` (Anthropic) |
 | Access | Private |
 
@@ -688,7 +688,20 @@ checkpoints, and creative assets via Cloudinary.
 3. Paste into the system prompt / instructions field of your agent
 4. Save
 
+### 2.3 — Enable Builtin Tools
 
+Enable these 10 builtin tools (names may vary by platform):
+
+- [x] Code Interpreter
+- [x] Web Search (Google)
+- [x] Researcher
+- [x] Todo / Task List
+- [x] Web Scraper
+- [x] Query Executor (SQL)
+- [x] CSV Reader
+- [x] String Matcher
+- [x] Display File
+- [x] File Search
 
 ---
 
@@ -815,7 +828,7 @@ Each sub-agent is a separate agent that the main agent delegates tasks to. They 
 
 | Setting | Value |
 |---------|-------|
-| Name | `Reporting & Analysis Sub-Agent [1 of 5]` |
+| Name | `Simba — Reporting & Analysis` |
 | Model | `claude-opus-4-5` |
 | Access | CHAT_ONLY |
 | System Prompt | `prompts/sub-agents/01_reporting_analysis.md` |
@@ -843,7 +856,7 @@ Each sub-agent is a separate agent that the main agent delegates tasks to. They 
 
 | Setting | Value |
 |---------|-------|
-| Name | `Research & Intelligence Sub-Agent [2 of 5]` |
+| Name | `Nemo — Research & Intelligence` |
 | Model | `claude-opus-4-5` |
 | Access | CHAT_ONLY |
 | System Prompt | `prompts/sub-agents/02_research_intelligence.md` |
@@ -866,7 +879,7 @@ Each sub-agent is a separate agent that the main agent delegates tasks to. They 
 
 | Setting | Value |
 |---------|-------|
-| Name | `Optimization Sub-Agent [3 of 5]` |
+| Name | `Elsa — Optimization` |
 | Model | `claude-opus-4-5` |
 | Access | CHAT_ONLY |
 | System Prompt | `prompts/sub-agents/03_optimization.md` |
@@ -887,7 +900,7 @@ This sub-agent's system prompt references two custom actions that need to be bui
 
 | Setting | Value |
 |---------|-------|
-| Name | `Shopping & PMax Sub-Agent [4 of 5]` |
+| Name | `Aladdin — Shopping & PMax` |
 | Model | `claude-opus-4-5` |
 | Access | CHAT_ONLY |
 | System Prompt | `prompts/sub-agents/04_shopping_pmax.md` |
@@ -907,7 +920,7 @@ This sub-agent's system prompt references one custom action that needs to be bui
 
 | Setting | Value |
 |---------|-------|
-| Name | `Creative Sub-Agent [5 of 5]` |
+| Name | `Moana — Creative` |
 | Model | `claude-opus-4-5` |
 | Access | CHAT_ONLY |
 | System Prompt | `prompts/sub-agents/05_creative.md` |
@@ -923,11 +936,11 @@ This sub-agent's system prompt references one custom action that needs to be bui
 
 ---
 
-### Sub-Agent 6: Creative Innovate Tool
+### Sub-Agent 6: Baymax — Creative Innovate
 
 | Setting | Value |
 |---------|-------|
-| Name | `Creative Innovate Tool` |
+| Name | `Baymax — Creative Innovate` |
 | Model | `claude-sonnet-4-5` ⚡ *(lighter model — intentional)* |
 | Access | CHAT_ONLY |
 | System Prompt | `prompts/sub-agents/06_creative_innovate.md` |
@@ -952,12 +965,12 @@ After creating all 6 sub-agents, you need to register them with the main agent s
 
 | # | Sub-Agent Name | Agent ID |
 |---|----------------|----------|
-| 1 | Reporting & Analysis Sub-Agent [1 of 5] | `de724cf6-1bf3-4c88-8723-8f3583821824` |
-| 2 | Research & Intelligence Sub-Agent [2 of 5] | `77c5378f-e325-4de0-8504-29bbf44ffd0d` |
-| 3 | Optimization Sub-Agent [3 of 5] | `9f3a2bb4-67a5-4818-9e4c-d53dd694f3ae` |
-| 4 | Shopping & PMax Sub-Agent [4 of 5] | `474e12e3-af1d-4b36-8851-6ee1bca996aa` |
-| 5 | Creative Sub-Agent [5 of 5] | `a1000ff9-63c7-4a99-a6fd-45c25cf361ef` |
-| 6 | Creative Innovate Tool | `08be59bb-819d-48fd-b2f7-851d002ae201` |
+| 1 | Simba — Reporting & Analysis | `8b9991fd-7750-417e-a2c2-69527d64388b` |
+| 2 | Nemo — Research & Intelligence | `47885bdc-0390-44a4-ab58-9046c1182691` |
+| 3 | Elsa — Optimization | `c08c6cde-b9a6-4aa4-b7a2-3b6ed5720cbb` |
+| 4 | Aladdin — Shopping & PMax | `b57147ce-fa6e-47ec-b92b-39bc8d16d7a7` |
+| 5 | Moana — Creative | `9aeb9afc-bd87-4df7-955a-1b928b23aa0e` |
+| 6 | Baymax — Creative Innovate | `9b971c1c-0204-4496-869e-7a3620718242` |
 
 > 💡 Note: Agent IDs will be **different** if you're creating new agents (they're auto-generated). The IDs above are from the original build and are provided for reference.
 
@@ -1030,7 +1043,7 @@ Expected: Agent delegates to Reporting sub-agent
 
 ```
 You: "Upload this image and resize it for Instagram: [IMAGE_URL]"
-Expected: Agent uses Cloudinary Creative Tools or delegates to Creative Innovate Tool
+Expected: Agent uses Cloudinary Creative Tools or delegates to Baymax — Creative Innovate
          Returns resized image URLs
 ```
 
@@ -1097,7 +1110,7 @@ Actions that don't call external APIs: Package Installer, Session & State Manage
      │Report- │ │Rese- │ │Opt-│ │Shop- │ │Creat- │ │Creative    │
      │ing &   │ │arch &│ │imi-│ │ping &│ │ive    │ │Innovate    │
      │Analysis│ │Intel │ │zat-│ │PMax  │ │       │ │Tool        │
-     │[1of5]  │ │[2of5]│ │ion │ │[4of5]│ │[5of5] │ │(Sonnet 4.5)│
+     │[Simba]  │ │[Nemo]│ │ion │ │[Aladdin]│ │[Moana] │ │(Sonnet 4.5)│
      │        │ │      │ │[3] │ │      │ │       │ │            │
      │8 acts  │ │5 acts│ │⚠️0 │ │⚠️0   │ │2 acts │ │3 acts      │
      └────────┘ └──────┘ └────┘ └──────┘ └───────┘ └────────────┘
@@ -1181,6 +1194,6 @@ This project is provided as-is. The Google Ads API is subject to Google's [Terms
 
 ---
 
-> **Built by:** John @ It All Started With A Idea  
-> **Agent Version:** Enterprise Edition v10.0  
+> **Maintained by:** Open Source Community  
+> **Agent Version:** Open Source Edition  
 > **Last Updated:** 2026-02-10

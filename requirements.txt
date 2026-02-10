@@ -1,5 +1,5 @@
 # =============================================================================
-# Google Ads Agent — Python Dependencies
+# Google Ads API Agent — Python Dependencies
 # =============================================================================
 
 # --- Core: Anthropic API ---

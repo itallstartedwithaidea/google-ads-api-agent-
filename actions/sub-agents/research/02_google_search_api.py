@@ -128,7 +128,7 @@ def run(query, location=None, gl="us", hl="en", num_results=10, time_period=None
 python
 5.4 Google Ads Transparency Center - API
 Field	Value
-Action ID	1df108c3-3e5e-43fb-8566-41d8515c2c7d
+Action ID	458e1715-d525-4af3-8b4a-65fc19675708
 Integration	google_ads
 Created	2026-01-29T19:16:32.699Z
 Updated	2026-01-29T19:16:33.184Z

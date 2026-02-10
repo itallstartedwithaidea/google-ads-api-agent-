@@ -1,8 +1,8 @@
 Secret Key	Description	Credential ID
-DEVELOPER_TOKEN	Google Ads API Developer Token	68bcd56b-e223-4238-a773-5176787d18ff
-CLIENT_ID	OAuth2 Client ID	c38f863c-cc05-4dda-ac60-e1568ae0354c
-CLIENT_SECRET	OAuth2 Client Secret	3650e54a-ade0-4d61-b481-5bba192f00a1
-REFRESH_TOKEN	OAuth2 Refresh Token	36cb18ed-f8b5-44ec-a525-6ec524174983
+DEVELOPER_TOKEN	Google Ads API Developer Token	d367d130-bc68-4f9a-8057-b22d7bfcc1aa
+CLIENT_ID	OAuth2 Client ID	4cf4e22e-f66d-4728-b7a7-3655c6c87799
+CLIENT_SECRET	OAuth2 Client Secret	b4dcdc1b-e2fa-471d-b1b3-453148c5ae19
+REFRESH_TOKEN	OAuth2 Refresh Token	13ebb617-1662-43d6-8d06-2af3cf09c1d9
 Full Code
 try:
     from google.ads.googleads.client import GoogleAdsClient
@@ -159,7 +159,7 @@ def run(customer_id, action, login_customer_id=None, keywords=None, url=None,
 python
 5.2 Package Installer [For EveryAgent]
 Field	Value
-Action ID	d80e070e-e4b9-4132-82c7-851d7ae55196
+Action ID	8845bc27-db18-47ac-8150-6ae02e36de80
 Integration	_(none — no credentials)_
 Created	2026-01-29T19:16:17.495Z
 Updated	2026-01-29T19:16:17.501Z

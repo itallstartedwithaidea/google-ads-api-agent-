@@ -1,8 +1,8 @@
 """
-Google Ads Agent — Tool Executor (Production-Ready)
+Google Ads API Agent — Tool Executor (Production-Ready)
 Executes tool calls by loading and running the corresponding action Python files.
 
-Handles three Relevance AI → standalone Python adaptation issues:
+Handles three agent-platform → standalone Python adaptation issues:
 1. secrets injection — Platform injects `secrets` as a global; we do the same pre-exec
 2. pip install suppression — Actions run subprocess pip install at import time;
    we monkey-patch subprocess to skip these since requirements.txt handles deps

@@ -134,7 +134,7 @@ def build_image_transform_url(cloud_name, public_id, width, height,
                                use_gen_fill=False, gravity='center', quality='auto:best'):
     """
     Build Cloudinary transformation URL for images.
-    Matches the Creative Innovate Tool approach.
+    Matches the Baymax — Creative Innovate approach.
     """
     transformations = [
         f'w_{width}',
@@ -168,7 +168,7 @@ def build_video_transform_url(cloud_name, public_id, width=None, height=None,
                                start_offset=None, end_offset=None, effect=None):
     """
     Build Cloudinary transformation URL for videos.
-    Matches the Creative Innovate Tool approach.
+    Matches the Baymax — Creative Innovate approach.
     """
     transformations = []
 
@@ -251,7 +251,7 @@ def resize_image_with_gen_fill(public_id, width, height, gravity='center',
                                 quality='auto:best', save_to_file_flag=True):
     """
     Resize image using AI Generative Fill.
-    Matches resizeImageWithGenFill from Creative Innovate Tool.
+    Matches resizeImageWithGenFill from Baymax — Creative Innovate.
     """
     creds = get_credentials()
 
@@ -297,7 +297,7 @@ def resize_video(public_id, width=None, height=None, aspect_ratio=None,
                  crop='fill', gravity='auto', start_offset=None, end_offset=None, effect=None):
     """
     Resize video with smart cropping.
-    Matches resizeVideo from Creative Innovate Tool.
+    Matches resizeVideo from Baymax — Creative Innovate.
     """
     creds = get_credentials()
 
@@ -417,7 +417,7 @@ def batch_resize_package(public_id, package_name, resource_type='image', save_to
 def run(action, **kwargs):
     """
     Cloudinary Creative Tools v5.16.0
-    Aligned with Creative Innovate Tool approach - URL transforms, not API calls.
+    Aligned with Baymax — Creative Innovate approach - URL transforms, not API calls.
 
     Actions:
     - upload_image: Upload image using unsigned preset

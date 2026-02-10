@@ -1,4 +1,4 @@
-# Google Ads Agent — Full Architecture & Reconstruction Kit
+# Google Ads API Agent — Full Architecture & Reconstruction Kit
 
 > **Enterprise-grade Google Ads management system** powered by Claude Opus 4.5, with 28 custom API actions, 6 specialized sub-agents, and live read/write access to Google Ads accounts.
 
@@ -20,7 +20,7 @@
   - [3 — Optimization](#3--optimization-sub-agent)
   - [4 — Shopping & PMax](#4--shopping--pmax-sub-agent)
   - [5 — Creative](#5--creative-sub-agent)
-  - [6 — Creative Innovate Tool](#6--creative-innovate-tool)
+  - [6 — Baymax — Creative Innovate](#6--creative-innovate-tool)
 - [Credential Configuration](#credential-configuration)
 - [Known Issues & Gaps](#known-issues--gaps)
 - [Reconstruction Checklist](#reconstruction-checklist)
@@ -81,12 +81,12 @@
 
 | Property | Value |
 |----------|-------|
-| **Agent ID** | `dc78f37b-99ce-4c7a-b912-704b1aa78156` |
-| **Name** | Google Ads Agent [beta/live-write/read] |
+| **Agent ID** | `d99e43e0-cf27-45d6-bc97-43e5a6572c96` |
+| **Name** | Google Ads API Agent |
 | **Model** | `claude-opus-4-5` (Anthropic) |
 | **Access Level** | PRIVATE |
-| **Organization** | org-10004586 |
-| **Owner User ID** | 10481239 |
+| **Organization** | org-XXXXXXXXXX |
+| **Owner User ID** | YOUR_USER_ID |
 | **Custom Actions** | 28 |
 | **Sub-Agents** | 6 |
 | **Builtin Tools** | 10 |
@@ -95,10 +95,10 @@
 ### System Prompt
 
 <details>
-<summary><strong>Click to expand full system prompt (Enterprise Edition v10.0)</strong></summary>
+<summary><strong>Click to expand full system prompt (Open Source Edition)</strong></summary>
 
 ```markdown
-# Google Ads Agent - Enterprise Edition v10.0
+# Google Ads API Agent
 ## Filter-First Architecture + Top-Down Reporting + Dollar-Based Inputs
 
 ## Identity
@@ -238,7 +238,7 @@ TIER 6: SHAPING    → limit, sort_by, detail_level
 
 ---
 
-## ⚠️ KEY REMINDERS (v10.0)
+## ⚠️ KEY REMINDERS
 
 1. INSTALL FIRST — Run pip install google-ads>=28.1.0 at conversation start
 2. CEP FIRST — Ask probing questions BEFORE any API calls
@@ -262,81 +262,81 @@ All 28 custom actions organized by category:
 
 | # | Action | ID | Key Operations |
 |---|--------|----|----------------|
-| 19 | **Query Planner & Budget Manager** | `c3f33a4e` | `get_account_summary`, `build_query_plan`, `validate_completeness` |
+| 19 | **Query Planner & Budget Manager** | `adc709f2` | `get_account_summary`, `build_query_plan`, `validate_completeness` |
 
 #### Campaign Lifecycle
 
 | # | Action | ID | Key Operations |
 |---|--------|----|----------------|
-| 25 | **Campaign Creator** | `099db082` | `create_search`, `create_pmax`, `create_display`, `create_demand_gen`, `create_shopping` |
-| 9 | **Campaign & Ad Group Manager** | `b818b493` | `list_campaigns`, `find_campaign`, `get_campaign`, `update_status`, `list_ad_groups`, `create_ad_group` |
-| 5 | **Budget Manager** | `b191b54e` | `list_budgets`, `update_budget`, `create_budget`, `get_pacing` |
-| 6 | **RSA Ad Manager** | `4c2ed646` | `list`, `create`, `pause`, `enable` |
-| 7 | **Bid & Keyword Manager** | `facfd086` | `get_keyword_bids`, `update_bids`, `add_keywords`, `add_from_search_terms` |
-| 10 | **Google Ads Mutate** | `205d3fbb` | Generic bulk `create`/`update`/`remove` operations |
+| 25 | **Campaign Creator** | `69571cfd` | `create_search`, `create_pmax`, `create_display`, `create_demand_gen`, `create_shopping` |
+| 9 | **Campaign & Ad Group Manager** | `98418c5d` | `list_campaigns`, `find_campaign`, `get_campaign`, `update_status`, `list_ad_groups`, `create_ad_group` |
+| 5 | **Budget Manager** | `1860f479` | `list_budgets`, `update_budget`, `create_budget`, `get_pacing` |
+| 6 | **RSA Ad Manager** | `150453ab` | `list`, `create`, `pause`, `enable` |
+| 7 | **Bid & Keyword Manager** | `87a75276` | `get_keyword_bids`, `update_bids`, `add_keywords`, `add_from_search_terms` |
+| 10 | **Google Ads Mutate** | `cd9bfe4c` | Generic bulk `create`/`update`/`remove` operations |
 
 #### Bidding & Optimization
 
 | # | Action | ID | Key Operations |
 |---|--------|----|----------------|
-| 27 | **Bidding Strategy Manager** | `1b762c7d` | `list`, `switch`, `set_target_cpa`, `set_target_roas`, `create_portfolio`, `add_to_portfolio` |
-| 26 | **Ad Schedule Manager** | `d9edcf51` | `get`/`set`/`remove` schedules, `hourly_performance` |
-| 20 | **Recommendations Manager** | `b06c3b34` | `list`, `apply`, `dismiss`, `get_impact` |
+| 27 | **Bidding Strategy Manager** | `6729d7a4` | `list`, `switch`, `set_target_cpa`, `set_target_roas`, `create_portfolio`, `add_to_portfolio` |
+| 26 | **Ad Schedule Manager** | `39ff268f` | `get`/`set`/`remove` schedules, `hourly_performance` |
+| 20 | **Recommendations Manager** | `20407f53` | `list`, `apply`, `dismiss`, `get_impact` |
 
 #### Targeting
 
 | # | Action | ID | Key Operations |
 |---|--------|----|----------------|
-| 22 | **Geo & Location Targeting Manager** | `56eecd1d` | `search_geo_targets`, `add`/`exclude`/`remove` locations, `geo_performance` |
-| 23 | **Device Performance Manager** | `f92bb613` | `list_device_performance`, `update_bid_modifier`, `recommendations` |
-| 3 | **Audience Manager** | `1ad57d33` | `list_audiences`, `get_performance`, `add_to_campaign`/`ad_group` |
+| 22 | **Geo & Location Targeting Manager** | `dfee8d08` | `search_geo_targets`, `add`/`exclude`/`remove` locations, `geo_performance` |
+| 23 | **Device Performance Manager** | `0dbb9a0a` | `list_device_performance`, `update_bid_modifier`, `recommendations` |
+| 3 | **Audience Manager** | `f15de61b` | `list_audiences`, `get_performance`, `add_to_campaign`/`ad_group` |
 
 #### Analysis
 
 | # | Action | ID | Key Operations |
 |---|--------|----|----------------|
-| 21 | **Search Term Manager** | `da0ea470` | `list_search_terms`, `get_converting_terms`, `get_wasted_spend` |
-| 24 | **Change History Manager** | `d56d5657` | `list_changes`, `budget_changes`, `bid_changes`, `status_changes` |
-| 2 | **Conversion Tracking Manager** | `4e7dd1b7` | `list_conversion_actions`, `create`, `update`, `get_attribution` |
+| 21 | **Search Term Manager** | `7aeaac89` | `list_search_terms`, `get_converting_terms`, `get_wasted_spend` |
+| 24 | **Change History Manager** | `a487723a` | `list_changes`, `budget_changes`, `bid_changes`, `status_changes` |
+| 2 | **Conversion Tracking Manager** | `038c2c0f` | `list_conversion_actions`, `create`, `update`, `get_attribution` |
 
 #### PMax & Experiments
 
 | # | Action | ID | Key Operations |
 |---|--------|----|----------------|
-| 28 | **PMax Asset Group Manager** | `8218e0f3` | `list`/`create` asset groups, `add_assets`, `get_asset_performance` |
-| 13 | **Experiments Manager** | `9b44f60e` | `list`, `create`, `get_results`, `end`, `promote` |
+| 28 | **PMax Asset Group Manager** | `f33cd4e6` | `list`/`create` asset groups, `add_assets`, `get_asset_performance` |
+| 13 | **Experiments Manager** | `b1c8c8f4` | `list`, `create`, `get_results`, `end`, `promote` |
 
 #### Organization
 
 | # | Action | ID | Key Operations |
 |---|--------|----|----------------|
-| 1 | **Label Manager** | `99090289` | `list_labels`, `create_label`, `apply_label`, `list_labeled_entities` |
-| 8 | **Negative Keywords Manager** | `fd7b1afc` | `list_campaign_negatives`, `list_shared_sets`, `add`, `remove` |
-| 4 | **Asset Manager** | `b0d7f48c` | `list`, `create_sitelink`, `create_callout`, `create_call`, `link` |
+| 1 | **Label Manager** | `1b6e3cbd` | `list_labels`, `create_label`, `apply_label`, `list_labeled_entities` |
+| 8 | **Negative Keywords Manager** | `9dfaaa83` | `list_campaign_negatives`, `list_shared_sets`, `add`, `remove` |
+| 4 | **Asset Manager** | `97d5d97b` | `list`, `create_sitelink`, `create_callout`, `create_call`, `link` |
 
 #### Infrastructure
 
 | # | Action | ID | Key Operations |
 |---|--------|----|----------------|
-| 11 | **Account Access Checker** | `cb0400cb` | `list_accessible`, `find`/`search`, `get_hierarchy` |
-| 16 | **API Gateway - Context Manager** | `e4529640` | Route API calls, auto-offload large responses to files |
-| 17 | **Session & State Manager** | `63993c88` | Sessions, query plan cache, sub-agent sync, file search |
-| 14 | **Package Installer** | `9de09fd1` | Install optional Python packages by category |
-| 15 | **Check User Access Levels** | `8f788bd9` | Check user roles (ADMIN/STANDARD/READ_ONLY) |
-| 12 | **Scripts Manager** | `5b84fbfc` | Informational — Google Ads scripts guidance (UI only) |
+| 11 | **Account Access Checker** | `b4d19d74` | `list_accessible`, `find`/`search`, `get_hierarchy` |
+| 16 | **API Gateway - Context Manager** | `81fa2bc5` | Route API calls, auto-offload large responses to files |
+| 17 | **Session & State Manager** | `da6b2b05` | Sessions, query plan cache, sub-agent sync, file search |
+| 14 | **Package Installer** | `e8e9907a` | Install optional Python packages by category |
+| 15 | **Check User Access Levels** | `0c6fc8de` | Check user roles (ADMIN/STANDARD/READ_ONLY) |
+| 12 | **Scripts Manager** | `afa413bc` | Informational — Google Ads scripts guidance (UI only) |
 
 #### Creative
 
 | # | Action | ID | Key Operations |
 |---|--------|----|----------------|
-| 18 | **Cloudinary Creative Tools** | `413cabd5` | Upload, resize, platform presets, gen fill, batch resize |
+| 18 | **Cloudinary Creative Tools** | `296e3502` | Upload, resize, platform presets, gen fill, batch resize |
 
 ### Action Schemas & Parameters
 
 <details>
 <summary><strong>Click to expand all 28 action schemas</strong></summary>
 
-#### 1. Label Manager — `99090289-128a-4cf9-9a44-317bba38ce7e`
+#### 1. Label Manager — `1b6e3cbd-e342-4c83-a685-94465e545ff9`
 
 ```python
 run(action, search=None, customer_id=None, label_id=None, name=None, color=None,
@@ -352,7 +352,7 @@ run(action, search=None, customer_id=None, label_id=None, name=None, color=None,
 
 ---
 
-#### 2. Conversion Tracking Manager — `4e7dd1b7-36d1-40ce-855c-269c7e4877ae`
+#### 2. Conversion Tracking Manager — `038c2c0f-edb6-4674-b79d-8481ffed4dcf`
 
 ```python
 run(action, search=None, customer_id=None, category=None, status=None, name_contains=None,
@@ -369,7 +369,7 @@ run(action, search=None, customer_id=None, category=None, status=None, name_cont
 
 ---
 
-#### 3. Audience Manager — `1ad57d33-9849-44bc-b69e-c37f01c1b145`
+#### 3. Audience Manager — `f15de61b-9f4c-4f51-b9d4-c96471c09578`
 
 ```python
 run(customer_id, action, login_customer_id=None, campaign_id=None, ad_group_id=None,
@@ -386,7 +386,7 @@ run(customer_id, action, login_customer_id=None, campaign_id=None, ad_group_id=N
 
 ---
 
-#### 4. Asset Manager — `b0d7f48c-18a4-4194-a251-29f3c0b3e222`
+#### 4. Asset Manager — `97d5d97b-c77a-4c71-bed5-a87934a7720d`
 
 ```python
 run(customer_id, action, login_customer_id=None, asset_data=None, campaign_id=None,
@@ -401,7 +401,7 @@ run(customer_id, action, login_customer_id=None, asset_data=None, campaign_id=No
 
 ---
 
-#### 5. Budget Manager — `b191b54e-5d38-4da9-ac03-be0e1787a604`
+#### 5. Budget Manager — `1860f479-89c2-4545-8f50-1b10205aad67`
 
 ```python
 run(customer_id, action, login_customer_id=None, budget_id=None,
@@ -419,7 +419,7 @@ run(customer_id, action, login_customer_id=None, budget_id=None,
 
 ---
 
-#### 6. RSA Ad Manager — `4c2ed646-606d-450e-9f32-57d13f4342dd`
+#### 6. RSA Ad Manager — `150453ab-349d-457c-b254-675a033f146d`
 
 ```python
 run(customer_id, action, login_customer_id=None, ad_group_id=None, campaign_id=None,
@@ -435,7 +435,7 @@ run(customer_id, action, login_customer_id=None, ad_group_id=None, campaign_id=N
 
 ---
 
-#### 7. Bid & Keyword Manager — `facfd086-2437-4f6b-9625-3b68050d6437`
+#### 7. Bid & Keyword Manager — `87a75276-0ecd-48f4-84a5-b3e007b13f09`
 
 ```python
 run(customer_id, action, login_customer_id=None, ad_group_id=None, campaign_id=None,
@@ -456,7 +456,7 @@ run(customer_id, action, login_customer_id=None, ad_group_id=None, campaign_id=N
 
 ---
 
-#### 8. Negative Keywords Manager — `fd7b1afc-0766-4c7f-b7ab-e0ff2c97fe92`
+#### 8. Negative Keywords Manager — `9dfaaa83-58b7-4273-8383-bcc6b83ec8f5`
 
 ```python
 run(customer_id, action, login_customer_id=None, campaign_id=None, keyword_text=None,
@@ -469,7 +469,7 @@ run(customer_id, action, login_customer_id=None, campaign_id=None, keyword_text=
 
 ---
 
-#### 9. Campaign & Ad Group Manager — `b818b493-bf8c-469a-a123-e1c1cc509851`
+#### 9. Campaign & Ad Group Manager — `98418c5d-2e83-4a76-b833-abbc58164830`
 
 ```python
 run(customer_id=None, action="list_campaigns", login_customer_id=None, campaign_id=None,
@@ -491,7 +491,7 @@ run(customer_id=None, action="list_campaigns", login_customer_id=None, campaign_
 
 ---
 
-#### 10. Google Ads Mutate — `205d3fbb-9d0f-44c9-8137-70f687bfc072`
+#### 10. Google Ads Mutate — `cd9bfe4c-4ed6-4ba9-aea3-203a80ab933b`
 
 ```python
 run(customer_id, operations, login_customer_id=None)
@@ -510,7 +510,7 @@ Operations format:
 
 ---
 
-#### 11. Account Access Checker — `cb0400cb-6be3-42d2-8ca5-b4c4a0ef6209`
+#### 11. Account Access Checker — `b4d19d74-e17e-4ef8-995d-65d6f2c21fec`
 
 ```python
 run(operation="list_accessible", customer_id=None, login_customer_id=None, search=None)
@@ -522,7 +522,7 @@ run(operation="list_accessible", customer_id=None, login_customer_id=None, searc
 
 ---
 
-#### 12. Scripts Manager — `5b84fbfc-021b-474b-a0de-e3521f3751e3`
+#### 12. Scripts Manager — `afa413bc-7831-483e-b4d9-2f859fee145a`
 
 ```python
 run(action, search=None, customer_id=None, name=None, name_contains=None,
@@ -533,7 +533,7 @@ run(action, search=None, customer_id=None, name=None, name_contains=None,
 
 ---
 
-#### 13. Experiments Manager — `9b44f60e-d0c1-4c42-bccd-7a81c3e34a22`
+#### 13. Experiments Manager — `b1c8c8f4-bb06-4f84-9402-c0bea94ace7d`
 
 ```python
 run(action, search=None, customer_id=None, experiment_id=None, name=None,
@@ -549,7 +549,7 @@ run(action, search=None, customer_id=None, experiment_id=None, name=None,
 
 ---
 
-#### 14. Package Installer — `9de09fd1-92c3-4b72-bee3-b81b76431e80`
+#### 14. Package Installer — `e8e9907a-715e-49e9-9142-055b2011e589`
 
 ```python
 run(install_category="all")
@@ -561,7 +561,7 @@ Categories: `math`, `testing`, `advertising`, `presentation`, `html_css`, `color
 
 ---
 
-#### 15. Check User Access Levels — `8f788bd9-c295-4d8e-9227-4d9b52883c0e`
+#### 15. Check User Access Levels — `0c6fc8de-20e4-478a-b8f7-17190f7e831d`
 
 ```python
 run(customer_id, login_customer_id=None)
@@ -571,7 +571,7 @@ Returns: User list with access roles (`ADMIN`, `STANDARD`, `READ_ONLY`, `EMAIL_O
 
 ---
 
-#### 16. API Gateway - Context Manager — `e4529640-6761-4e95-a54b-84390b137515`
+#### 16. API Gateway - Context Manager — `81fa2bc5-2401-494c-8f55-2a44603130a3`
 
 ```python
 run(action_type, action_params, session_id=None, max_preview_rows=5,
@@ -587,7 +587,7 @@ run(action_type, action_params, session_id=None, max_preview_rows=5,
 
 ---
 
-#### 17. Session & State Manager — `63993c88-23e2-42d3-8f04-cb52758a736a`
+#### 17. Session & State Manager — `da6b2b05-58cc-4879-ac2f-c12f29ebdee0`
 
 ```python
 run(action, **kwargs)
@@ -607,7 +607,7 @@ run(action, **kwargs)
 
 ---
 
-#### 18. Cloudinary Creative Tools — `413cabd5-a8c8-4965-9c25-83e5d35e6aed`
+#### 18. Cloudinary Creative Tools — `296e3502-4145-4e24-8da9-eb1e06c284a2`
 
 ```python
 run(action, **kwargs)
@@ -627,7 +627,7 @@ Platform presets: `instagram_story`, `instagram_feed`, `instagram_reel`, `tiktok
 
 ---
 
-#### 19. Query Planner & Budget Manager — `c3f33a4e-138e-48a6-a5e2-9648450349b4`
+#### 19. Query Planner & Budget Manager — `adc709f2-eaf3-4b98-abc2-4107f75c9520`
 
 ```python
 run(action, search=None, customer_id=None, date_range="LAST_30_DAYS",
@@ -644,7 +644,7 @@ run(action, search=None, customer_id=None, date_range="LAST_30_DAYS",
 
 ---
 
-#### 20. Recommendations Manager — `b06c3b34-a3f1-43ec-b20d-33cadb4be6b7`
+#### 20. Recommendations Manager — `20407f53-f385-4b6a-9e57-fc2ae6a67c1d`
 
 ```python
 run(action, search=None, customer_id=None, rec_type=None, campaign_ids=None,
@@ -653,7 +653,7 @@ run(action, search=None, customer_id=None, rec_type=None, campaign_ids=None,
 
 ---
 
-#### 21. Search Term Manager — `da0ea470-868f-4ba8-9880-f7e34f705f9c`
+#### 21. Search Term Manager — `7aeaac89-d861-4773-80c7-3c58af3af23f`
 
 ```python
 run(customer_id, action, login_customer_id=None, campaign_id=None, ad_group_id=None,
@@ -669,7 +669,7 @@ run(customer_id, action, login_customer_id=None, campaign_id=None, ad_group_id=N
 
 ---
 
-#### 22. Geo & Location Targeting Manager — `56eecd1d-fa61-4e1a-9df2-2381985db753`
+#### 22. Geo & Location Targeting Manager — `dfee8d08-9771-491f-b6c1-c4f758e78d37`
 
 ```python
 run(customer_id, action, login_customer_id=None, campaign_id=None,
@@ -686,7 +686,7 @@ run(customer_id, action, login_customer_id=None, campaign_id=None,
 
 ---
 
-#### 23. Device Performance Manager — `f92bb613-63ed-4468-94de-4a061e18bc25`
+#### 23. Device Performance Manager — `0dbb9a0a-1be2-482f-991a-f086076e57ef`
 
 ```python
 run(action, search=None, customer_id=None, date_range="LAST_30_DAYS",
@@ -699,7 +699,7 @@ Device values: `DESKTOP`, `MOBILE`, `TABLET`
 
 ---
 
-#### 24. Change History Manager — `d56d5657-5e01-4b4a-bc7d-ae04de62e60d`
+#### 24. Change History Manager — `a487723a-9208-4620-b101-4f46a9a24ceb`
 
 ```python
 run(action, search=None, customer_id=None, change_date_range="LAST_30_DAYS",
@@ -714,7 +714,7 @@ run(action, search=None, customer_id=None, change_date_range="LAST_30_DAYS",
 
 ---
 
-#### 25. Campaign Creator — `099db082-9e33-4b34-932f-2974d3209f65`
+#### 25. Campaign Creator — `69571cfd-5e66-4b35-9bcf-d5265eab424f`
 
 ```python
 run(action, search=None, customer_id=None, name=None, daily_budget=None,
@@ -733,7 +733,7 @@ run(action, search=None, customer_id=None, name=None, daily_budget=None,
 
 ---
 
-#### 26. Ad Schedule Manager — `d9edcf51-7016-47c0-bb59-ce6ba0c312c1`
+#### 26. Ad Schedule Manager — `39ff268f-fadc-4bbd-8382-f57d4df42f44`
 
 ```python
 run(action, search=None, customer_id=None, campaign_id=None, campaign_ids=None,
@@ -751,7 +751,7 @@ run(action, search=None, customer_id=None, campaign_id=None, campaign_ids=None,
 
 ---
 
-#### 27. Bidding Strategy Manager — `1b762c7d-3968-4335-8e68-d4b7769894eb`
+#### 27. Bidding Strategy Manager — `6729d7a4-4468-4f20-b02c-605b5221ec05`
 
 ```python
 run(action, search=None, customer_id=None, campaign_id=None,
@@ -770,7 +770,7 @@ run(action, search=None, customer_id=None, campaign_id=None,
 
 ---
 
-#### 28. PMax Asset Group Manager — `8218e0f3-f8b8-4484-9278-a8ed2e35d643`
+#### 28. PMax Asset Group Manager — `f33cd4e6-6d0b-4214-9fcb-d08a05abe26a`
 
 ```python
 run(action, search=None, customer_id=None, campaign_id=None, asset_group_id=None,
@@ -855,7 +855,7 @@ User Request
 | Bulk bid/budget changes, recommendations | Optimization [3] | Preview-before-execute safety |
 | Shopping campaigns, PMax asset groups | Shopping & PMax [4] | ROAS-focused e-commerce specialist |
 | Display ads, Demand Gen, visual formats | Creative [5] | Visual-first ad management |
-| Image/video resizing, AI gen fill | Creative Innovate Tool [6] | Cloudinary + Gemini processing |
+| Image/video resizing, AI gen fill | Baymax — Creative Innovate [6] | Cloudinary + Gemini processing |
 
 ---
 
@@ -863,7 +863,7 @@ User Request
 
 | Property | Value |
 |----------|-------|
-| **Agent ID** | `de724cf6-1bf3-4c88-8723-8f3583821824` |
+| **Agent ID** | `8b9991fd-7750-417e-a2c2-69527d64388b` |
 | **Model** | `claude-opus-4-5` |
 | **Access Level** | CHAT_ONLY |
 | **Core Principle** | *Summarize, don't dump.* Return key findings and insights, not raw data. |
@@ -879,7 +879,7 @@ User Request
 | 5 | Auction Insights Reporter | (see source) | v19 |
 | 6 | Change History Auditor | (see source) | v19 |
 | 7 | PMax Enhanced Reporting | (see source) | v19 |
-| 8 | Package Installer | `9de09fd1` | N/A |
+| 8 | Package Installer | `e8e9907a` | N/A |
 
 > ⚠️ Actions 3–4 use API v18 while others use v19 — verify version alignment during rebuild.
 
@@ -922,7 +922,7 @@ Google Ads Agent. You have direct API access to Google Ads accounts.
 
 | Property | Value |
 |----------|-------|
-| **Agent ID** | `77c5378f-e325-4de0-8504-29bbf44ffd0d` |
+| **Agent ID** | `47885bdc-0390-44a4-ab58-9046c1182691` |
 | **Model** | `claude-opus-4-5` |
 | **Access Level** | CHAT_ONLY |
 | **Core Principle** | *Insight over information.* Don't just report findings — explain what they mean for strategy. |
@@ -935,7 +935,7 @@ Google Ads Agent. You have direct API access to Google Ads accounts.
 | 2 | Google Search API (SearchAPI.io) | (see source) |
 | 3 | Google Ads Transparency Center | (see source) |
 | 4 | Google Trends Analyzer | (see source) |
-| 5 | Package Installer | `9de09fd1` |
+| 5 | Package Installer | `e8e9907a` |
 
 **Builtin Tools (10):** `code_interpreter`, `query_executor`, `csv_reader`, `string_matcher`, `display_file`, `file_search`, `browser_use`, `researcher`, `google_web_search`, `web_scraper`
 
@@ -981,7 +981,7 @@ for the user's Google Ads strategy. Always:
 
 | Property | Value |
 |----------|-------|
-| **Agent ID** | `9f3a2bb4-67a5-4818-9e4c-d53dd694f3ae` |
+| **Agent ID** | `c08c6cde-b9a6-4aa4-b7a2-3b6ed5720cbb` |
 | **Model** | `claude-opus-4-5` |
 | **Access Level** | CHAT_ONLY |
 | **Core Principle** | *Preview before execute.* Never make changes without showing exactly what will happen. |
@@ -1024,7 +1024,7 @@ will happen. Always:
 
 | Property | Value |
 |----------|-------|
-| **Agent ID** | `474e12e3-af1d-4b36-8851-6ee1bca996aa` |
+| **Agent ID** | `b57147ce-fa6e-47ec-b92b-39bc8d16d7a7` |
 | **Model** | `claude-opus-4-5` |
 | **Access Level** | CHAT_ONLY |
 | **Core Principle** | *E-commerce focused.* Everything connects to product sales and ROAS. |
@@ -1075,7 +1075,7 @@ Always:
 
 | Property | Value |
 |----------|-------|
-| **Agent ID** | `a1000ff9-63c7-4a99-a6fd-45c25cf361ef` |
+| **Agent ID** | `9aeb9afc-bd87-4df7-955a-1b928b23aa0e` |
 | **Model** | `claude-opus-4-5` |
 | **Access Level** | CHAT_ONLY |
 | **Core Principle** | *Visual first.* Show how ads will look before anything else. |
@@ -1115,11 +1115,11 @@ optimizing visual ad formats across Display, YouTube, Discover, and Gmail.
 
 ---
 
-### 6 — Creative Innovate Tool
+### 6 — Baymax — Creative Innovate
 
 | Property | Value |
 |----------|-------|
-| **Agent ID** | `08be59bb-819d-48fd-b2f7-851d002ae201` |
+| **Agent ID** | `9b971c1c-0204-4496-869e-7a3620718242` |
 | **Model** | `claude-sonnet-4-5` *(lighter model for processing tasks)* |
 | **Access Level** | CHAT_ONLY |
 | **Version** | v5.11.0 (prompt) / v5.16.0 (Cloudinary) / v5.15.0 (Gemini) |
@@ -1147,11 +1147,11 @@ optimizing visual ad formats across Display, YouTube, Discover, and Gmail.
 <summary><strong>System Prompt (excerpt)</strong></summary>
 
 ```markdown
-# Creative Innovate Tool v5.11.0
+# Baymax — Creative Innovate v5.11.0
 ## Cloudinary & Gemini-Powered Creative Asset Processing
 
 ## Identity
-You are the Creative Innovate Tool, an AI assistant that helps paid media strategists
+You are the Baymax — Creative Innovate, an AI assistant that helps paid media strategists
 prepare creative assets for advertising campaigns. You work as a sub-agent of the
 Google Ads Agent, handling all creative asset tasks.
 
@@ -1245,10 +1245,10 @@ Your job: Receive asset URLs or IDs → Process with appropriate AI → Return r
 
 ### Phase 1: Foundation
 
-- [ ] Create agent: **Google Ads Agent [beta/live-write/read]**
+- [ ] Create agent: **Google Ads API Agent**
 - [ ] Set model to `claude-opus-4-5`
 - [ ] Set access level to PRIVATE
-- [ ] Paste full system prompt (Enterprise Edition v10.0)
+- [ ] Paste full system prompt (Open Source Edition)
 - [ ] Set sub-agent description for delegation
 
 ### Phase 2: Builtin Tools
@@ -1300,12 +1300,12 @@ Your job: Receive asset URLs or IDs → Process with appropriate AI → Return r
 
 ### Phase 4: Sub-Agents (6 total)
 
-- [ ] **[1 of 5]** Reporting & Analysis — 8 custom actions, 9 builtin tools
-- [ ] **[2 of 5]** Research & Intelligence — 5 custom actions, 10 builtin tools
-- [ ] **[3 of 5]** Optimization — ⚠️ 2 actions need to be built first
-- [ ] **[4 of 5]** Shopping & PMax — ⚠️ 1 action needs to be built first
-- [ ] **[5 of 5]** Creative — 2 custom actions, 10 builtin tools
-- [ ] **[Tool]** Creative Innovate Tool — Cloudinary + Gemini, runs on Sonnet 4.5
+- [ ] **Simba** — Reporting & Analysis — 8 custom actions, 9 builtin tools
+- [ ] **Nemo** — Research & Intelligence — 5 custom actions, 10 builtin tools
+- [ ] **Elsa** — Optimization — ⚠️ 2 actions need to be built first
+- [ ] **Aladdin** — Shopping & PMax — ⚠️ 1 action needs to be built first
+- [ ] **Moana** — Creative — 2 custom actions, 10 builtin tools
+- [ ] **[Tool]** Baymax — Creative Innovate — Cloudinary + Gemini, runs on Sonnet 4.5
 
 ### Phase 5: User Access
 
@@ -1358,13 +1358,13 @@ def run(**params):
 
 | # | User ID | Access Level | Added |
 |---|---------|-------------|-------|
-| 1 | 10481230 | CAN_EDIT | 2026-02-06 |
-| 2 | 10481240 | CAN_EDIT | 2026-02-06 |
-| 3 | 10481271 | CAN_EDIT | 2026-02-06 |
-| 4 | 10481257 | CAN_EDIT | 2026-02-06 |
-| 5 | 10481275 | CAN_EDIT | 2026-02-06 |
+| 1 | TEAM_MEMBER_1 | CAN_EDIT | 2026-02-06 |
+| 2 | TEAM_MEMBER_2 | CAN_EDIT | 2026-02-06 |
+| 3 | TEAM_MEMBER_3 | CAN_EDIT | 2026-02-06 |
+| 4 | TEAM_MEMBER_4 | CAN_EDIT | 2026-02-06 |
+| 5 | TEAM_MEMBER_5 | CAN_EDIT | 2026-02-06 |
 
-**Owner:** User ID 10481239
+**Owner:** User ID YOUR_USER_ID
 
 ---
 
@@ -1385,5 +1385,5 @@ def run(**params):
 ---
 
 > **Generated:** 2026-02-10  
-> **Agent ID:** `dc78f37b-99ce-4c7a-b912-704b1aa78156`  
-> **Version:** Enterprise Edition v10.0
+> **Agent ID:** `d99e43e0-cf27-45d6-bc97-43e5a6572c96`  
+> **Version:** Open Source Edition

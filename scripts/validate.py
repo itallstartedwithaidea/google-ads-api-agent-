@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Google Ads Agent — Deployment Validator
+Google Ads API Agent — Deployment Validator
 Runs a series of checks to verify the deployment is working correctly.
 
 Usage:

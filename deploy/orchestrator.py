@@ -1,5 +1,5 @@
 """
-Google Ads Agent — Orchestrator
+Google Ads API Agent — Orchestrator
 The core agentic loop that drives the main agent and sub-agent delegation.
 
 Usage:
@@ -279,23 +279,23 @@ def create_agent_system(api_key: str = None, repo_root: str = None) -> GoogleAds
     # Register sub-agents (they're instantiated on-demand when delegated to)
     sub_agent_configs = [
         {
-            "name": "Reporting & Analysis",
-            "agent_id": "de724cf6-1bf3-4c88-8723-8f3583821824",
+            "name": "Simba — Reporting & Analysis",
+            "agent_id": "8b9991fd-7750-417e-a2c2-69527d64388b",
             "prompt_file": "prompts/sub-agents/01_reporting_analysis.md",
         },
         {
-            "name": "Research & Intelligence",
-            "agent_id": "77c5378f-e325-4de0-8504-29bbf44ffd0d",
+            "name": "Nemo — Research & Intelligence",
+            "agent_id": "47885bdc-0390-44a4-ab58-9046c1182691",
             "prompt_file": "prompts/sub-agents/02_research_intelligence.md",
         },
         {
-            "name": "Creative",
-            "agent_id": "a1000ff9-63c7-4a99-a6fd-45c25cf361ef",
+            "name": "Moana — Creative",
+            "agent_id": "9aeb9afc-bd87-4df7-955a-1b928b23aa0e",
             "prompt_file": "prompts/sub-agents/05_creative.md",
         },
         {
-            "name": "Creative Innovate Tool",
-            "agent_id": "08be59bb-819d-48fd-b2f7-851d002ae201",
+            "name": "Baymax — Creative Innovate",
+            "agent_id": "9b971c1c-0204-4496-869e-7a3620718242",
             "model": "claude-sonnet-4-5-20250929",
             "prompt_file": "prompts/sub-agents/06_creative_innovate.md",
         },

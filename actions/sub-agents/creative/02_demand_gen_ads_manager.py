@@ -88,10 +88,10 @@ Response Shape — Ads
 json
 Credential Configuration
 Secret Key	Description	Credential ID
-DEVELOPER_TOKEN	Google Ads API Developer Token	dca257e7-b261-4b2d-9e8e-553a9dfd8938
-CLIENT_ID	OAuth2 Client ID	c0baa2be-21f2-4711-bd13-9b6aa480bde4
-CLIENT_SECRET	OAuth2 Client Secret	c2211212-1198-4548-9cf6-5035a6a4cb03
-REFRESH_TOKEN	OAuth2 Refresh Token	7edbc536-cc3d-4b5b-bf65-f08e072670b9
+DEVELOPER_TOKEN	Google Ads API Developer Token	4cd2ffd0-3d45-41a0-b5ea-3453c5ac99ef
+CLIENT_ID	OAuth2 Client ID	a86dc1ff-5538-4b57-b142-f6d7bd9c51e6
+CLIENT_SECRET	OAuth2 Client Secret	c1d87a8c-793d-402a-870d-4188ebda8441
+REFRESH_TOKEN	OAuth2 Refresh Token	271b7bda-298e-463d-85cd-4acfb4a5336a
 Full Python Code
 try:
     from google.ads.googleads.client import GoogleAdsClient

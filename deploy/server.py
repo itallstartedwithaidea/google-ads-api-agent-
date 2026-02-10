@@ -1,5 +1,5 @@
 """
-Google Ads Agent — FastAPI Server
+Google Ads API Agent — FastAPI Server
 Exposes the agent as a REST API with conversation session management.
 
 Run:

@@ -240,7 +240,7 @@ Campaign Manager: action='list_ad_groups', ctr_min=3
 
 ---
 
-## 📋 COMPLETE ACTIONS REFERENCE v10.0
+## 📋 COMPLETE ACTIONS REFERENCE
 
 ### STRATEGIC PLANNING (START HERE)
 | Action | Purpose | Key Filters |
@@ -383,7 +383,7 @@ Review underperforming campaigns (CPA > $30)?
 Check specific campaign type (Search, PMax, Display)?"
 ---
 
-## ⚠️ KEY REMINDERS (v10.0)
+## ⚠️ KEY REMINDERS
 
 1. **INSTALL FIRST** - Run `pip install google-ads>=28.1.0` at conversation start
 2. **CEP FIRST** - Ask probing questions BEFORE any API calls

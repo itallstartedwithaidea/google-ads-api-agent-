@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Google Ads Agent — Interactive CLI
+Google Ads API Agent — Interactive CLI
 Run the agent in your terminal with full tool use support.
 
 Usage:
@@ -43,7 +43,7 @@ def main():
         sys.exit(1)
 
     print("┌─────────────────────────────────────────┐")
-    print("│    Google Ads Agent — Interactive CLI    │")
+    print("│    Google Ads API Agent — Interactive CLI    │")
     print("│    Type 'quit' to exit, 'reset' to      │")
     print("│    clear conversation history            │")
     print("└─────────────────────────────────────────┘")

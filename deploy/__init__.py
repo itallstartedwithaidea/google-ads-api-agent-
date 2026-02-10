@@ -1,5 +1,5 @@
 """
-Google Ads Agent — Deploy Package
+Google Ads API Agent — Deploy Package
 Programmatic deployment via the Anthropic API.
 """
 

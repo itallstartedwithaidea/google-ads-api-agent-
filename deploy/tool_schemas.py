@@ -1,5 +1,5 @@
 """
-Google Ads Agent — Tool Schemas for Anthropic API
+Google Ads API Agent — Tool Schemas for Anthropic API
 All 28 main agent tools defined in Claude tool_use JSON Schema format.
 
 Usage:
