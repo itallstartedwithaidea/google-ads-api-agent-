@@ -688,20 +688,7 @@ checkpoints, and creative assets via Cloudinary.
 3. Paste into the system prompt / instructions field of your agent
 4. Save
 
-### 2.3 — Enable Builtin Tools
 
-Enable these 10 builtin tools (names may vary by platform):
-
-- [x] Code Interpreter
-- [x] Web Search (Google)
-- [x] Researcher
-- [x] Todo / Task List
-- [x] Web Scraper
-- [x] Query Executor (SQL)
-- [x] CSV Reader
-- [x] String Matcher
-- [x] Display File
-- [x] File Search
 
 ---
 
