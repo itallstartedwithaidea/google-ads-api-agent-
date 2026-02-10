@@ -75,35 +75,67 @@ This is the **programmatic deployment** — no manual UI, no clicking. Everythin
 
 ### How It Works
 
+The action files in this repo were originally built for **Relevance AI** (an agent platform). The `deploy/` package adapts them to run standalone via the Anthropic API. Here's what happens under the hood when you run `python scripts/cli.py`:
+
 ```
-┌──────────┐     ┌─────────────────────┐     ┌──────────────────┐
-│ Your App │────▶│  Anthropic Messages  │────▶│  Claude responds  │
-│ (or CLI) │     │  API + tool schemas  │     │  with tool_use    │
-└──────────┘     └─────────────────────┘     └────────┬─────────┘
-                                                       │
-                                          ┌────────────▼────────────┐
-                                          │  Your code executes the  │
-                                          │  tool (Google Ads API,   │
-                                          │  Cloudinary, etc.)       │
-                                          └────────────┬────────────┘
-                                                       │
-                                          ┌────────────▼────────────┐
-                                          │  Return tool_result to   │
-                                          │  Claude → repeat until   │
-                                          │  Claude sends final text │
-                                          └─────────────────────────┘
+YOU: "Show me campaigns for Acme Corp"
+ │
+ ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  orchestrator.py — sends to Anthropic Messages API:             │
+│                                                                 │
+│  client.messages.create(                                        │
+│      model="claude-opus-4-5-20251101",                          │
+│      system=<your system prompt from prompts/>,                 │
+│      tools=<28 tool JSON schemas from tool_schemas.py>,         │
+│      messages=[{"role": "user", "content": "Show me..."}]       │
+│  )                                                              │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+                             ▼ Claude returns stop_reason="tool_use"
+┌─────────────────────────────────────────────────────────────────┐
+│  Claude's response:                                             │
+│  tool_use: name="campaign_adgroup_manager"                      │
+│            input={"action": "list_campaigns",                   │
+│                    "search": "Acme Corp",                       │
+│                    "status_filter": "ENABLED"}                  │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  tool_executor.py — the adapter layer:                          │
+│                                                                 │
+│  1. Loads actions/main-agent/09_campaign_adgroup_manager.py     │
+│  2. Injects secrets={"DEVELOPER_TOKEN": "...", ...}             │
+│     into module namespace (replicating Relevance AI runtime)    │
+│  3. Suppresses subprocess pip install calls                     │
+│  4. Inspects run() signature, drops any extra params            │
+│  5. Calls: run(action="list_campaigns", search="Acme Corp",    │
+│              status_filter="ENABLED")                           │
+│  6. Returns JSON result to orchestrator                         │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+                             ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  orchestrator.py — sends tool_result back to Claude:            │
+│                                                                 │
+│  messages.append({"role": "user", "content": [{                 │
+│      "type": "tool_result",                                     │
+│      "tool_use_id": "toolu_xxx",                                │
+│      "content": "<JSON campaign data>"                          │
+│  }]})                                                           │
+│                                                                 │
+│  → Loop repeats until Claude returns final text                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-The **agentic tool loop** works like this:
+**What the adapter layer (`tool_executor.py`) solves:**
 
-1. You send a user message + 28 tool definitions to Claude via the Messages API
-2. Claude decides which tool(s) to call and returns `tool_use` blocks
-3. Your code catches the `tool_use`, runs the actual Python function (Google Ads API call, Cloudinary upload, etc.)
-4. You send the result back as a `tool_result`
-5. Claude processes the result and either calls another tool or returns a final text answer
-6. Repeat until `stop_reason != "tool_use"`
-
-All of this is handled automatically by the `deploy/orchestrator.py` in this repo.
+| Problem | What the action files do | What the adapter does |
+|---------|------------------------|----------------------|
+| **Secrets** | Reference `secrets["KEY"]` as a bare global injected by Relevance AI | Injects `secrets` dict into module `__dict__` before `exec_module()` |
+| **Pip installs** | Run `subprocess.check_call(["pip", "install", "google-ads"])` at import time | Monkey-patches subprocess to skip pip commands (deps already in `requirements.txt`) |
+| **Parameter mismatch** | 26/28 `run()` functions have explicit params (no `**kwargs`) | Inspects `run()` signature via `inspect.signature()`, drops any params Claude sends that aren't in the function |
 
 ### A-1: Get Your Anthropic API Key
 
@@ -119,31 +151,57 @@ All of this is handled automatically by the `deploy/orchestrator.py` in this rep
 
 ### A-2: Install & Run (Python)
 
+**What happens, step by step, when you run this:**
+
 ```bash
-# Clone the repo
+# 1. Clone — gets all 66 files: action code, prompts, schemas, adapter layer
 git clone https://github.com/YOUR_USERNAME/google-ads-agent.git
 cd google-ads-agent
 
-# Create virtual environment
+# 2. Virtual env — isolates dependencies
 python -m venv venv
 source venv/bin/activate   # Windows: venv\Scripts\activate
 
-# Install dependencies
+# 3. Install deps — this is what replaces the inline pip installs
+#    google-ads, anthropic, fastapi, cloudinary, etc. all install here
 pip install -r requirements.txt
 
-# Configure credentials
+# 4. Configure — the .env file feeds all 5 services' credentials
 cp .env.example .env
-# Edit .env with your API keys (see Step 1 below for each credential)
+# Edit .env — you need at minimum:
+#   ANTHROPIC_API_KEY (to talk to Claude)
+#   GOOGLE_ADS_* keys (to talk to Google Ads API)
+#   Others are optional depending on which tools you use
 
-# Validate the deployment
+# 5. Validate — checks files exist, imports work, credentials are set,
+#    optionally makes a live API call to verify Claude responds
 python scripts/validate.py
 
-# Run the interactive CLI
+# 6. Run the agent — this starts the agentic loop:
+#    Your message → Claude + 28 tool schemas → tool_use → execute → repeat
 python scripts/cli.py
-
-# Or run as an API server
-uvicorn deploy.server:app --host 0.0.0.0 --port 8000
 ```
+
+**After step 6, you'll see:**
+```
+┌─────────────────────────────────────────┐
+│    Google Ads Agent — Interactive CLI    │
+│    Type 'quit' to exit, 'reset' to      │
+│    clear conversation history            │
+└─────────────────────────────────────────┘
+  Model: claude-opus-4-5-20251101
+  Tools: 28 loaded
+
+You: Show me an account summary for Acme Corp
+  [thinking...]
+
+Agent: Here's the account summary for Acme Corp (ID: 123-456-7890):
+       Total Spend (Last 30 Days): $12,345.67
+       Active Campaigns: 8
+       ...
+```
+
+That's it. The agent is running, making real Google Ads API calls through your credentials, with Claude orchestrating which tools to call and how to interpret the results.
 
 ### A-3: Use in Your Own Code
 
@@ -237,7 +295,20 @@ docker compose run validate
 | **Cost control** | None | Track token usage via `response.usage` and set budget alerts |
 | **Retry logic** | SDK default (2 retries) | Tune `max_retries` and add exponential backoff for Google Ads API calls |
 
-### A-7: The Deploy Package — File Reference
+### A-7: Known Gotchas
+
+Things that might trip you up on first run:
+
+| Issue | What Happens | Fix |
+|-------|-------------|-----|
+| **google-ads import fails** | Action files need `google-ads>=28.1.0` which has C dependencies | Run `pip install -r requirements.txt` first — this is why the adapter suppresses inline pip installs |
+| **`secrets` KeyError** | An action tries to access a credential you didn't set in `.env` | Check which credential pattern the tool uses (A/B/C/D) and verify `.env` has those keys |
+| **TypeError on run()** | Claude sends a param the run() function doesn't accept | The param filter should catch this — if it doesn't, check `python -c "from deploy import ToolExecutor; print(ToolExecutor().get_run_signature('tool_name'))"` |
+| **Rate limits** | Google Ads API Basic Access = 15K ops/day, 4 req/sec | Use `cost_min`, `status`, `limit` params to reduce result sets |
+| **First load is slow** | Module loading + pip suppression adds ~1-2s on first tool call | Subsequent calls use cached modules — instant |
+| **Token costs** | claude-opus-4-5 with 28 tool definitions = ~4K tokens per request just for tools | For cost optimization, switch to `claude-sonnet-4-5-20250929` in the constructor |
+
+### A-8: The Deploy Package — File Reference
 
 ```
 deploy/
