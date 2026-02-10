@@ -7,6 +7,8 @@
 ## Table of Contents
 
 - [Quick Start](#quick-start)
+- [Two Deployment Paths](#two-deployment-paths)
+- [Path A: Deploy via the Anthropic API](#path-a-deploy-via-the-anthropic-api)
 - [Repository Structure](#repository-structure)
 - [Prerequisites](#prerequisites)
 - [Step 1: Obtain API Credentials](#step-1-obtain-api-credentials)
@@ -14,11 +16,12 @@
   - [1B: Cloudinary](#1b-cloudinary-credentials)
   - [1C: SearchAPI.io](#1c-searchapiio-credentials)
   - [1D: Google AI (Gemini)](#1d-google-ai--gemini-credentials)
-- [Step 2: Create the Main Agent](#step-2-create-the-main-agent)
-- [Step 3: Install Custom Actions](#step-3-install-custom-actions-28-total)
-- [Step 4: Create Sub-Agents](#step-4-create-sub-agents-6-total)
-- [Step 5: Link Sub-Agents to Main Agent](#step-5-link-sub-agents-to-main-agent)
-- [Step 6: Grant User Access](#step-6-grant-user-access)
+- [Path B: Deploy on an Agent Platform](#path-b-deploy-on-an-agent-platform-manual-ui)
+  - [Step 2: Create the Main Agent](#step-2-create-the-main-agent)
+  - [Step 3: Install Custom Actions](#step-3-install-custom-actions-28-total)
+  - [Step 4: Create Sub-Agents](#step-4-create-sub-agents-6-total)
+  - [Step 5: Link Sub-Agents](#step-5-link-sub-agents-to-main-agent)
+  - [Step 6: Grant User Access](#step-6-grant-user-access)
 - [Step 7: Validation & Testing](#step-7-validation--testing)
 - [Credential Patterns Reference](#credential-patterns-reference)
 - [Architecture Overview](#architecture-overview)
@@ -38,18 +41,244 @@ cd google-ads-agent
 cp .env.example .env
 # Edit .env with your API keys (see Step 1 below for how to get each one)
 
-# 3. Follow Steps 2-7 below to build out the agent on your platform
+# 3a. PATH A — Programmatic (Anthropic API)
+pip install -r requirements.txt
+python scripts/validate.py        # Check everything works
+python scripts/cli.py             # Interactive CLI
+# OR
+uvicorn deploy.server:app --port 8000  # REST API server
+# OR
+docker compose up                 # Containerized
+
+# 3b. PATH B — Agent Platform (Manual UI)
+# Follow Steps 2-7 below to build the agent in your platform's UI
 ```
 
 ---
 
-## Repository Structure
+## Two Deployment Paths
+
+This repo supports **two ways** to deploy the agent. Pick the one that fits your use case:
+
+| Path | Best For | What You Need |
+|------|----------|---------------|
+| **A: Anthropic API (Programmatic)** | Production apps, SaaS products, automation pipelines, multi-tenant | Anthropic API key + your code |
+| **B: Agent Platform (Manual UI)** | Quick prototyping, single-user, visual builder | Account on Relevance AI, OpenAI, or similar |
+
+**Path A** is what makes this repeatable and scalable. Path B is the original build approach documented later in this README.
+
+---
+
+## Path A: Deploy via the Anthropic API
+
+This is the **programmatic deployment** — no manual UI, no clicking. Everything runs through Claude's Messages API with tool use.
+
+### How It Works
+
+```
+┌──────────┐     ┌─────────────────────┐     ┌──────────────────┐
+│ Your App │────▶│  Anthropic Messages  │────▶│  Claude responds  │
+│ (or CLI) │     │  API + tool schemas  │     │  with tool_use    │
+└──────────┘     └─────────────────────┘     └────────┬─────────┘
+                                                       │
+                                          ┌────────────▼────────────┐
+                                          │  Your code executes the  │
+                                          │  tool (Google Ads API,   │
+                                          │  Cloudinary, etc.)       │
+                                          └────────────┬────────────┘
+                                                       │
+                                          ┌────────────▼────────────┐
+                                          │  Return tool_result to   │
+                                          │  Claude → repeat until   │
+                                          │  Claude sends final text │
+                                          └─────────────────────────┘
+```
+
+The **agentic tool loop** works like this:
+
+1. You send a user message + 28 tool definitions to Claude via the Messages API
+2. Claude decides which tool(s) to call and returns `tool_use` blocks
+3. Your code catches the `tool_use`, runs the actual Python function (Google Ads API call, Cloudinary upload, etc.)
+4. You send the result back as a `tool_result`
+5. Claude processes the result and either calls another tool or returns a final text answer
+6. Repeat until `stop_reason != "tool_use"`
+
+All of this is handled automatically by the `deploy/orchestrator.py` in this repo.
+
+### A-1: Get Your Anthropic API Key
+
+1. Go to **[Anthropic Console](https://console.anthropic.com)**
+2. Sign up or log in
+3. Go to **[Settings → API Keys](https://console.anthropic.com/settings/keys)**
+4. Click **Create Key**
+5. Copy the key → this is your `ANTHROPIC_API_KEY`
+
+> 💡 The key starts with `sk-ant-api03-...`. Store it securely — it grants full API access.
+
+**How this ties into the system:** Every call to Claude's Messages API requires this key in the `x-api-key` header. The `anthropic` Python SDK reads it from `ANTHROPIC_API_KEY` env var automatically.
+
+### A-2: Install & Run (Python)
+
+```bash
+# Clone the repo
+git clone https://github.com/YOUR_USERNAME/google-ads-agent.git
+cd google-ads-agent
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure credentials
+cp .env.example .env
+# Edit .env with your API keys (see Step 1 below for each credential)
+
+# Validate the deployment
+python scripts/validate.py
+
+# Run the interactive CLI
+python scripts/cli.py
+
+# Or run as an API server
+uvicorn deploy.server:app --host 0.0.0.0 --port 8000
+```
+
+### A-3: Use in Your Own Code
+
+```python
+from dotenv import load_dotenv
+load_dotenv()
+
+from deploy import create_agent_system
+
+# Create the full agent with all 28 tools + sub-agents
+agent = create_agent_system()
+
+# Single question
+response = agent.chat("Show me an account summary for Acme Corp")
+print(response)
+
+# Multi-turn conversation (history is maintained automatically)
+response = agent.chat("Drill into the top campaign by spend")
+print(response)
+
+# Reset conversation when done
+agent.reset_conversation()
+```
+
+### A-4: Deploy as a REST API
+
+The included FastAPI server gives you HTTP endpoints for any frontend or integration:
+
+```bash
+# Start the server
+uvicorn deploy.server:app --host 0.0.0.0 --port 8000
+
+# Or with Docker
+docker compose up
+```
+
+**Endpoints:**
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/chat` | Send a message, get a response (auto-creates session) |
+| `POST` | `/sessions` | Create a new conversation session |
+| `GET` | `/sessions/{id}` | Get session info and message count |
+| `DELETE` | `/sessions/{id}` | Delete a session |
+| `GET` | `/health` | Health check (credential status) |
+| `GET` | `/tools` | List all 28 tools and their file status |
+
+**Example request:**
+
+```bash
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "List all campaigns for Acme Corp", "session_id": "optional-session-id"}'
+```
+
+**Example response:**
+
+```json
+{
+  "response": "Here are the active campaigns for Acme Corp (ID: 123-456-7890):\n\n1. Brand Search — $1,234.56 spend, 89 conversions...",
+  "session_id": "abc-123-def",
+  "tool_calls_made": 2
+}
+```
+
+### A-5: Deploy with Docker
+
+```bash
+# Build and run
+docker compose up -d
+
+# Scale to multiple instances
+docker compose up -d --scale agent=3
+
+# Run the CLI interactively
+docker compose run cli
+
+# Run validation
+docker compose run validate
+```
+
+### A-6: Scaling Considerations
+
+| Concern | Current State | Production Upgrade |
+|---------|--------------|-------------------|
+| **Sessions** | In-memory dict | Swap to Redis — add `redis` service in docker-compose, replace `sessions` dict with Redis client |
+| **Rate limits** | Anthropic API limits per tier | Add request queuing with `celery` or `asyncio.Semaphore` |
+| **Multi-tenant** | Single credential set | Load credentials per-tenant from a secrets manager (AWS Secrets Manager, HashiCorp Vault) |
+| **Auth** | None | Add API key middleware or OAuth2 to the FastAPI server |
+| **Monitoring** | Basic logging | Add structured logging + export to Datadog/CloudWatch |
+| **Cost control** | None | Track token usage via `response.usage` and set budget alerts |
+| **Retry logic** | SDK default (2 retries) | Tune `max_retries` and add exponential backoff for Google Ads API calls |
+
+### A-7: The Deploy Package — File Reference
+
+```
+deploy/
+├── __init__.py          ← Package exports
+├── tool_schemas.py      ← All 28 tools in Anthropic tool_use JSON Schema format
+├── tool_executor.py     ← Maps tool_use calls → action Python files, injects credentials
+├── orchestrator.py      ← Agentic loop: send → tool_use → execute → return → repeat
+└── server.py            ← FastAPI REST API with session management
+
+scripts/
+├── cli.py               ← Interactive terminal agent
+└── validate.py           ← Deployment validation (files, imports, credentials, live API)
+```
+
+---
+
+## Path B: Deploy on an Agent Platform (Manual UI)
+
+If you prefer a visual builder (Relevance AI, OpenAI, etc.), follow Steps 2–7 below. You'll paste system prompts, action code, and credentials into the platform's UI.
+
+---
 
 ```
 google-ads-agent/
 ├── README.md                          ← You are here
 ├── .env.example                       ← Template for all required credentials
 ├── .gitignore
+├── requirements.txt                   ← Python dependencies
+├── Dockerfile                         ← Container build
+├── docker-compose.yml                 ← Multi-service orchestration
+│
+├── deploy/                            ← PROGRAMMATIC DEPLOYMENT (Path A)
+│   ├── __init__.py
+│   ├── tool_schemas.py                ← 28 tools in Anthropic JSON Schema format
+│   ├── tool_executor.py               ← Maps tool_use → action files + credential injection
+│   ├── orchestrator.py                ← Agentic loop: Claude ↔ tools ↔ sub-agents
+│   └── server.py                      ← FastAPI REST API with session management
+│
+├── scripts/
+│   ├── cli.py                         ← Interactive terminal agent
+│   └── validate.py                    ← Deployment validation suite
 │
 ├── actions/
 │   ├── main-agent/                    ← 28 Python action files for the main agent
@@ -102,6 +331,7 @@ Before you begin, you'll need:
 
 | Requirement | Why | Cost |
 |-------------|-----|------|
+| **Anthropic API key** | Powers the Claude agent via the Messages API | Pay-per-use ([pricing](https://docs.anthropic.com/en/docs/about-claude/pricing)) |
 | **Google Ads account** | API access to manage campaigns | Free (ads spend separate) |
 | **Google Ads Manager (MCC) account** | Multi-account access | Free |
 | **Google Cloud Platform project** | OAuth2 credentials for the Google Ads API | Free tier available |

@@ -1,0 +1,46 @@
+# =============================================================================
+# Google Ads Agent — Docker Compose
+# =============================================================================
+# Usage:
+#   docker compose up              → Start the agent API
+#   docker compose up -d           → Start in background
+#   docker compose up --scale agent=3  → Run 3 instances (behind load balancer)
+#   docker compose run cli         → Interactive CLI session
+# =============================================================================
+
+services:
+  # ── API Server ──────────────────────────────────────────────────────
+  agent:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - LOG_LEVEL=INFO
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; r = httpx.get('http://localhost:8000/health'); assert r.status_code == 200"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── Interactive CLI ─────────────────────────────────────────────────
+  cli:
+    build: .
+    env_file:
+      - .env
+    stdin_open: true
+    tty: true
+    entrypoint: ["python", "scripts/cli.py"]
+    profiles:
+      - cli
+
+  # ── Validation ──────────────────────────────────────────────────────
+  validate:
+    build: .
+    env_file:
+      - .env
+    entrypoint: ["python", "scripts/validate.py"]
+    profiles:
+      - test
